@@ -1,0 +1,283 @@
+/* ---------------------------------------------
+   GLOBAL LIGHT THEME
+--------------------------------------------- */
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: hsl(190, 73%, 85%);
+  color: #111827;
+}
+
+h1, h2, h3 { margin: 0 0 12px 0; }
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #dcdde5;
+  margin-bottom: 12px;
+}
+
+.btn {
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+}
+
+.btn.primary {
+  background: #88adda;
+  color: #1e293b;
+}
+
+.btn.danger {
+  background: #fcb1c4;
+  color: #581c24;
+}
+
+.small { font-size: 12px; }
+
+/* ---------------------------------------------
+   LOGIN PAGE
+--------------------------------------------- */
+.login-body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-card {
+  width: 350px;
+  background: #ffffff;
+  padding: 60px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(11, 15, 216, 0.1);
+}
+
+/* ---------------------------------------------
+   MAIN APP LAYOUT
+--------------------------------------------- */
+.app {
+  height: 100vh;
+  display: flex;
+}
+
+/* MAIN CONTENT (fixed to right of sidebar) */
+.main {
+  margin-left: 260px;
+  padding: 25px;
+  width: calc(100% - 260px);
+  transition: 0.3s ease;
+}
+
+.sidebar.collapsed + .main {
+  margin-left: 90px;
+  width: calc(100% - 90px);
+}
+
+/* ---------------------------------------------
+   SIDEBAR
+--------------------------------------------- */
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  background: white;
+  border-right: 2px solid #e3e9f3;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  transition: 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.logo-icon {
+  font-size: 26px;
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.sidebar.collapsed .logo-text {
+  display: none;
+}
+
+.toggle-btn {
+  background: #dbe8ff;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+/* MENU */
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-btn {
+  padding: 10px 14px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.nav-btn:hover {
+  background: #d8e5ff;
+}
+
+.nav-btn.active {
+  background: #a7c7ff;
+  font-weight: bold;
+}
+
+.sidebar.collapsed .nav-btn span:not(:first-child) {
+  display: none;
+}
+
+/* LOGOUT BUTTON */
+.logout-btn {
+  margin-top: auto;
+  background: #ffc9d1;
+  padding: 12px;
+  border-radius: 10px;
+  border: 2px solid black;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.logout-btn:hover {
+  background: #ffb4bf;
+}
+
+/* ---------------------------------------------
+   PAGE ANIMATION
+--------------------------------------------- */
+.page {
+  display: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: 0.35s ease;
+}
+
+.page.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------------------------------------------
+   DASHBOARD CARDS
+--------------------------------------------- */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.card {
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+  transition: 0.25s ease;
+  color: #1e293b;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.pastel1 { background: #A7C7FF; }
+.pastel2 { background: #B9E8C9; }
+.pastel3 { background: #FCE9A5; }
+.pastel4 { background: #D9C5FF; }
+.pastel5 { background: #F7C5D8; }
+
+/* ---------------------------------------------
+   FORM CARDS
+--------------------------------------------- */
+.form-card {
+  background: white;
+  padding: 18px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+}
+
+/* ---------------------------------------------
+   TABLES
+--------------------------------------------- */
+.pretty-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.pretty-table th {
+  background: #a7c7ff;
+  padding: 12px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.pretty-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.pretty-table tr:last-child td {
+  border-bottom: none;
+}
+
+.pretty-table tr:hover {
+  background: #eef5ff;
+}
+
+/* Button row inside forms */
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* ---------------------------------------------
+   SGPA BOX
+--------------------------------------------- */
+#sgpa-box {
+  background: white;
+  border-radius: 14px;
+  padding: 18px;
+  font-size: 20px;
+}
+
+#sgpa-value {
+  font-weight: bold;
+  color: #0a58ca;
+}

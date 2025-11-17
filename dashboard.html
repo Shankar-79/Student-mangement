@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Student MIS</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar" class="sidebar">
+
+        <div class="sidebar-header">
+            <span class="logo-icon">🎓</span>
+            <span class="logo-text">Student Portal</span>
+            <button id="sidebarToggle" class="toggle-btn">❮</button>
+        </div>
+
+        <div class="sidebar-menu">
+
+            <button class="nav-btn active" data-view="dashboard">
+                <span>🏠</span> Dashboard
+            </button>
+
+            <button class="nav-btn" data-view="profile">
+                <span>👤</span> Profile
+            </button>
+
+            <button class="nav-btn" data-view="attendance">
+                <span>📅</span> Attendance
+            </button>
+
+            <button class="nav-btn" data-view="registration">
+                <span>📚</span> Registration
+            </button>
+
+            <button class="nav-btn" data-view="payment">
+                <span>💳</span> Payments
+            </button>
+
+            <button class="nav-btn" data-view="result">
+                <span>📊</span> Results
+            </button>
+
+            <button class="nav-btn" data-view="settings">
+                <span>⚙️</span> Settings
+            </button>
+
+        </div>
+
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+
+    </div>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <h1 id="pageTitle">Dashboard</h1>
+
+        <!-- Dashboard -->
+        <div class="page active" id="page-dashboard">
+            <div class="card-grid">
+                <div class="card pastel1"><h3>Name</h3><p id="dashName">-</p></div>
+                <div class="card pastel2"><h3>Attendance</h3><p id="dashAttendance">-</p></div>
+                <div class="card pastel3"><h3>Results</h3><p id="dashResult">-</p></div>
+                <div class="card pastel4"><h3>Courses</h3><p id="dashCourses">-</p></div>
+                <div class="card pastel5"><h3>Payments</h3><p id="dashPayments">-</p></div>
+            </div>
+        </div>
+
+        <!-- Profile -->
+        <div class="page" id="page-profile">
+            <label>Name</label><input id="p-name">
+            <label>Email</label><input id="p-email">
+            <label>Phone</label><input id="p-phone">
+            <label>Course</label><input id="p-course">
+            <label>Address</label><textarea id="p-address"></textarea>
+            <button id="saveProfileBtn" class="btn primary">Save</button>
+        </div>
+
+        <!-- Attendance Page -->
+        <div class="page" id="page-attendance">
+
+            <form id="attendanceForm" class="form-card">
+                <h3>Attendance</h3>
+
+                <label>From Date</label>
+                <input type="date" id="filterFrom" required>
+
+                <label>To Date</label>
+                <input type="date" id="filterTo">
+
+                <label>Status</label>
+                <select id="att-status" required>
+                    <option value="Present">Present</option>
+                    <option value="Absent">Absent</option>
+                </select>
+
+                <div class="btn-row">
+                    <button type="button" id="filterBtn" class="btn primary">Mark Attendance</button>
+                    <button type="button" id="resetFilter" class="btn danger">Reset</button>
+                </div>
+            </form>
+
+            <h3>Attendance Records</h3>
+
+            <table class="table pretty-table" id="att-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+        </div>
+
+        <!-- Registration Page -->
+        <div class="page" id="page-registration">
+
+            <h2>REGISTRATION</h2>
+
+            <div class="form-card">
+                <table class="table pretty-table">
+                    <thead>
+                        <tr>
+                            <th>Course Code</th>
+                            <th>Course Name</th>
+                            <th>Select</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Math101</td>
+                            <td>Mathematics 101</td>
+                            <td><input type="checkbox" class="course-chk" value="Math101"></td>
+                        </tr>
+                        <tr>
+                            <td>CS201</td>
+                            <td>Computer Science 201</td>
+                            <td><input type="checkbox" class="course-chk" value="CS201"></td>
+                        </tr>
+                        <tr>
+                            <td>ENG150</td>
+                            <td>English Communication</td>
+                            <td><input type="checkbox" class="course-chk" value="ENG150"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <button id="course-save" class="btn primary" style="margin-top:15px;">Save Courses</button>
+            </div>
+
+            <h3>Registered Courses</h3>
+            <table class="table pretty-table" id="reg-table">
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Course Name</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+        </div>
+
+        <!-- Payment Page -->
+        <div class="page" id="page-payment">
+
+            <h2>PAYMENT</h2>
+
+            <form id="paymentForm" class="form-card">
+                <label>Amount (₹)</label>
+                <input type="number" id="pay-amount" required>
+
+                <label>Payment Mode</label>
+                <select id="pay-mode" required>
+                    <option value="UPI">UPI</option>
+                    <option value="Card">Card</option>
+                    <option value="Cash">Cash</option>
+                </select>
+
+                <button type="button" id="pay-btn" class="btn primary">Submit Payment</button>
+            </form>
+
+            <h3>Payment History</h3>
+
+            <table class="table pretty-table" id="pay-table">
+                <thead>
+                    <tr>
+                        <th>Amount (₹)</th>
+                        <th>Mode</th>
+                        <th>Date & Time</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+        </div>
+
+        <!-- Result Page -->
+        <div class="page" id="page-result">
+
+            <h2>RESULT</h2>
+
+            <div class="form-card">
+                <h3>Add Subject Marks</h3>
+
+                <label>Subject Code</label>
+                <input type="text" id="sub-code" placeholder="CS201">
+
+                <label>Subject Name</label>
+                <input type="text" id="sub-name" placeholder="Data Structures">
+
+                <label>Marks Obtained</label>
+                <input type="number" id="sub-marks" placeholder="80">
+
+                <label>Max Marks</label>
+                <input type="number" id="sub-max" placeholder="100">
+
+                <button id="add-subject" class="btn primary" style="margin-top:10px;">
+                    Add Subject
+                </button>
+            </div>
+
+            <div class="form-card" id="sgpa-box" style="margin-top:20px;">
+                <h3>SGPA: <span id="sgpa-value">--</span></h3>
+            </div>
+
+            <h3>Result Card</h3>
+            <table class="table pretty-table" id="result-table">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Subject</th>
+                        <th>Marks</th>
+                        <th>Max Marks</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+        </div>
+
+        <!-- Settings -->
+        <div class="page" id="page-settings">
+            <input type="password" id="new-pass" placeholder="New Password">
+            <input type="password" id="confirm-pass" placeholder="Confirm Password">
+            <button id="pass-change-btn" class="btn primary">Change</button>
+        </div>
+
+    </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
