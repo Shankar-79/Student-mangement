@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Admin Dashboard — EduMIS</title>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+</head>
+<body>
+
+<div id="toast"></div>
+<div id="spinner"><div class="spin"></div></div>
+
+<!-- Logout modal -->
+<div class="modal-overlay" id="logoutModal">
+  <div class="modal-box" style="max-width:340px">
+    <div class="modal-body" style="text-align:center;padding:2rem">
+      <div class="logout-icon"><i class="bi bi-power"></i></div>
+      <h4 style="margin-bottom:.4rem">Sign out?</h4>
+      <p style="color:var(--text-3);font-size:.875rem;margin-bottom:1.5rem">You'll be redirected to login.</p>
+      <div style="display:flex;gap:.75rem;justify-content:center">
+        <button class="btn btn-secondary" onclick="closeModal('logoutModal')">Cancel</button>
+        <button class="btn btn-danger" onclick="doLogout()">Sign Out</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Student Modal -->
+<div class="modal-overlay" id="studentModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title" id="studentModalTitle"><i class="bi bi-person-fill"></i> Add Student</span>
+      <button class="modal-close" onclick="closeModal('studentModal')"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-body">
+      <form id="studentForm" novalidate>
+        <input type="hidden" id="s_id"/>
+        <div class="form-grid two">
+          <div class="form-field"><label>Roll No <span class="req">*</span></label><input class="inp" id="s_roll" name="roll_no" required/></div>
+          <div class="form-field"><label>Full Name <span class="req">*</span></label><input class="inp" id="s_name" name="name" required/></div>
+          <div class="form-field"><label>Email <span class="req">*</span></label><input class="inp" id="s_email" name="email" type="email" required/></div>
+          <div class="form-field" id="s_pwField"><label>Password <span class="req">*</span></label><input class="inp" id="s_pass" name="password"/></div>
+          <div class="form-field"><label>Phone</label><input class="inp" id="s_phone" name="phone"/></div>
+          <div class="form-field"><label>Branch <span class="req">*</span></label><input class="inp" id="s_branch" name="branch" required/></div>
+          <div class="form-field"><label>Year</label>
+            <select class="inp" id="s_year" name="year"><option>1</option><option>2</option><option>3</option><option>4</option></select>
+          </div>
+          <div class="form-field"><label>Section</label><input class="inp" id="s_section" name="section" value="A" maxlength="3"/></div>
+          <div class="form-field"><label>Date of Birth</label><input class="inp" id="s_dob" name="dob" type="date"/></div>
+          <div class="form-field"><label>Address</label><input class="inp" id="s_address" name="address"/></div>
+        </div>
+        <div style="display:flex;gap:.75rem;margin-top:1rem">
+          <button type="submit" class="btn btn-primary" id="studentSubmitBtn">Add Student</button>
+          <button type="button" class="btn btn-secondary" onclick="closeModal('studentModal')">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Update Payment Modal -->
+<div class="modal-overlay" id="payUpdateModal">
+  <div class="modal-box" style="max-width:380px">
+    <div class="modal-header">
+      <span class="modal-title"><i class="bi bi-pencil-fill"></i> Update Payment</span>
+      <button class="modal-close" onclick="closeModal('payUpdateModal')"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-body">
+      <form id="payUpdateForm" novalidate>
+        <input type="hidden" id="pu_id"/>
+        <div class="form-grid">
+          <div class="form-field"><label>Status</label>
+            <select class="inp" id="pu_status" name="status"><option>Pending</option><option>Paid</option><option>Overdue</option></select>
+          </div>
+          <div class="form-field"><label>Paid Date</label><input class="inp" id="pu_paid_date" name="paid_date" type="date"/></div>
+          <div class="form-field"><label>Receipt No.</label><input class="inp" id="pu_receipt" name="receipt_no"/></div>
+        </div>
+        <div style="display:flex;gap:.75rem;margin-top:1rem">
+          <button type="submit" class="btn btn-primary">Update</button>
+          <button type="button" class="btn btn-secondary" onclick="closeModal('payUpdateModal')">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- App shell -->
+<div class="app-shell">
+  <div class="sb-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-brand"><i class="bi bi-mortarboard-fill"></i><span>EduMIS</span></div>
+    <div class="sb-user">
+      <div class="sb-avatar admin" id="sbAvatar"><i class="bi bi-shield-fill" style="font-size:.9rem"></i></div>
+      <div class="sb-user-info"><strong id="sbName">—</strong><small>Administrator</small></div>
+    </div>
+    <nav class="sb-nav" id="adminNav">
+      <div class="sb-link active" onclick="switchTab('students')"><i class="bi bi-people-fill"></i><span>Students</span></div>
+      <div class="sb-link" onclick="switchTab('marks')"><i class="bi bi-journal-richtext"></i><span>Marks</span></div>
+      <div class="sb-link" onclick="switchTab('attendance')"><i class="bi bi-calendar2-check-fill"></i><span>Attendance</span></div>
+      <div class="sb-link" onclick="switchTab('notices')"><i class="bi bi-megaphone-fill"></i><span>Notices</span></div>
+      <div class="sb-link" onclick="switchTab('payments')"><i class="bi bi-wallet2"></i><span>Payments</span></div>
+    </nav>
+    <div class="sb-footer">
+      <div class="sb-logout" onclick="showLogout()"><i class="bi bi-box-arrow-left"></i><span>Logout</span></div>
+    </div>
+  </aside>
+
+  <div class="app-main">
+    <header class="topbar">
+      <button class="topbar-menu" onclick="openSidebar()"><i class="bi bi-list"></i></button>
+      <div class="topbar-title">
+        <h2 id="pageTitle">Students</h2>
+        <span class="topbar-date" id="dateLabel"></span>
+      </div>
+      <div class="topbar-avatar admin" id="topAvatar"><i class="bi bi-shield-fill" style="font-size:.75rem"></i></div>
+    </header>
+
+    <div class="page" id="pageContent">
+      <div style="text-align:center;padding:3rem;color:var(--text-3)"><div class="spin" style="margin:0 auto"></div></div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/js/api.js"></script>
+<script>
+'use strict';
+
+let DB = {};
+let currentTab = 'students';
+const TAB_TITLES = { students:'Students', marks:'Marks', attendance:'Attendance', notices:'Notices', payments:'Payments' };
+
+(async () => {
+  const user = await requireAuth('admin');
+  if (!user) return;
+  document.getElementById('sbName').textContent = user.name || 'Admin';
+  setDateLabel();
+  loadAdminData();
+})();
+
+async function loadAdminData() {
+  showSpinner();
+  const res = await GET('/api/admin/dashboard');
+  hideSpinner();
+  if (!res.ok) { toast('Session expired.','error'); setTimeout(doLogout,1500); return; }
+  DB = res.data;
+  renderTab(currentTab);
+}
+
+function switchTab(name) {
+  currentTab = name;
+  document.querySelectorAll('#adminNav .sb-link').forEach((el,i) => {
+    el.classList.toggle('active', Object.keys(TAB_TITLES)[i] === name);
+  });
+  document.getElementById('pageTitle').textContent = TAB_TITLES[name] || name;
+  renderTab(name);
+  closeSidebar();
+}
+
+function renderTab(name) {
+  const el = document.getElementById('pageContent');
+  if      (name==='students')   el.innerHTML = renderStudents();
+  else if (name==='marks')      el.innerHTML = renderMarks();
+  else if (name==='attendance') el.innerHTML = renderAttendance();
+  else if (name==='notices')    el.innerHTML = renderNotices();
+  else if (name==='payments')   el.innerHTML = renderPayments();
+  bindTabEvents(name);
+}
+
+// ── STUDENTS ─────────────────────────────────────────────────
+function renderStudents() {
+  const rows = DB.students.map(s => `
+    <tr>
+      <td class="mono">${esc(s.roll_no)}</td>
+      <td class="fw6">${esc(s.name)}</td>
+      <td>${esc(s.branch)}</td>
+      <td>${s.year}-${esc(s.section)}</td>
+      <td>${esc(s.email)}</td>
+      <td>${s.phone||'—'}</td>
+      <td>
+        <div class="act-row">
+          <button class="act-btn act-edit" title="Edit" onclick="openEditStudent(${s.id})"><i class="bi bi-pencil-fill"></i></button>
+          <button class="act-btn act-del" title="Delete" onclick="deleteStudent(${s.id},'${esc(s.name)}')"><i class="bi bi-trash-fill"></i></button>
+        </div>
+      </td>
+    </tr>`).join('') || `<tr><td colspan="7" class="tbl-empty"><i class="bi bi-people"></i>No students yet.</td></tr>`;
+
+  return `
+    ${statCards()}
+    <div class="panel tab-panel">
+      <div class="panel-header">
+        <h4><i class="bi bi-people-fill"></i> All Students</h4>
+        <button class="btn btn-primary btn-sm" onclick="openAddStudent()"><i class="bi bi-plus-circle"></i> Add Student</button>
+      </div>
+      <div class="tbl-wrap"><table class="tbl"><thead>
+        <tr><th>Roll No</th><th>Name</th><th>Branch</th><th>Yr/Sec</th><th>Email</th><th>Phone</th><th>Actions</th></tr>
+      </thead><tbody>${rows}</tbody></table></div>
+    </div>`;
+}
+
+function statCards() {
+  const s = DB.stats;
+  return `<div class="cards-row">
+    <div class="scard blue"><div class="sc-icon"><i class="bi bi-people-fill"></i></div><div><p class="sc-label">Students</p><h3 class="sc-value">${s.students}</h3></div></div>
+    <div class="scard orange"><div class="sc-icon"><i class="bi bi-hourglass-split"></i></div><div><p class="sc-label">Pending Fees</p><h3 class="sc-value">${s.pending}</h3></div></div>
+    <div class="scard purple"><div class="sc-icon"><i class="bi bi-megaphone-fill"></i></div><div><p class="sc-label">Notices</p><h3 class="sc-value">${s.notices}</h3></div></div>
+    <div class="scard green"><div class="sc-icon"><i class="bi bi-book-fill"></i></div><div><p class="sc-label">Subjects</p><h3 class="sc-value">${s.subjects}</h3></div></div>
+  </div>`;
+}
+
+// ── MARKS ─────────────────────────────────────────────────────
+function studentOptions() {
+  return DB.students.map(s=>`<option value="${s.id}">${esc(s.name)} (${esc(s.roll_no)})</option>`).join('');
+}
+function subjectOptions() {
+  return DB.subjects.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
+}
+
+function renderMarks() {
+  const rows = DB.marks.map(m=>{
+    const pct = +(m.marks/m.max_marks*100).toFixed(1);
+    return `<tr>
+      <td>${esc(m.student_name)}</td>
+      <td>${esc(m.subject_name)}</td>
+      <td><span class="chip">${esc(m.exam_type)}</span></td>
+      <td class="fw6">${m.marks|0}/${m.max_marks|0}</td>
+      <td>${fmtDate(m.exam_date)}</td>
+      <td><span class="grade grade-${gradeClass(pct)}">${gradeLetter(pct)}</span></td>
+      <td><button class="act-btn act-del" onclick="deleteMark(${m.id})"><i class="bi bi-trash-fill"></i></button></td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="7" class="tbl-empty"><i class="bi bi-journal-x"></i>No marks yet.</td></tr>`;
+
+  return `
+    <div style="display:grid;grid-template-columns:340px 1fr;gap:1.2rem;align-items:start">
+      <div class="panel">
+        <div class="panel-header"><h4><i class="bi bi-plus-circle"></i> Add Marks</h4></div>
+        <div class="panel-body">
+          <form id="marksForm" novalidate>
+            <div class="form-grid" style="gap:.75rem">
+              <div class="form-field"><label>Student <span class="req">*</span></label><select class="inp" name="student_id" required><option value="">Select…</option>${studentOptions()}</select></div>
+              <div class="form-field"><label>Subject <span class="req">*</span></label><select class="inp" name="subject_id" required><option value="">Select…</option>${subjectOptions()}</select></div>
+              <div class="form-field"><label>Exam Type</label>
+                <select class="inp" name="exam_type"><option>Internal</option><option>Mid-Term</option><option>End-Term</option><option>Practical</option></select>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+                <div class="form-field"><label>Marks <span class="req">*</span></label><input class="inp" name="marks" type="number" min="0" required/></div>
+                <div class="form-field"><label>Out of</label><input class="inp" name="max_marks" type="number" value="100" min="1"/></div>
+              </div>
+              <div class="form-field"><label>Exam Date</label><input class="inp" name="exam_date" type="date"/></div>
+              <button type="submit" class="btn btn-primary btn-full"><i class="bi bi-plus-circle"></i> Add Marks</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="panel tab-panel">
+        <div class="panel-header"><h4><i class="bi bi-journal-richtext"></i> Marks Records</h4></div>
+        <div class="tbl-wrap"><table class="tbl"><thead>
+          <tr><th>Student</th><th>Subject</th><th>Type</th><th>Marks</th><th>Date</th><th>Grade</th><th></th></tr>
+        </thead><tbody>${rows}</tbody></table></div>
+      </div>
+    </div>`;
+}
+
+// ── ATTENDANCE ────────────────────────────────────────────────
+function renderAttendance() {
+  const rows = DB.attendance.map(a=>{
+    const pct = a.total_classes > 0 ? +(a.attended/a.total_classes*100).toFixed(1) : 0;
+    return `<tr>
+      <td>${esc(a.student_name)}</td>
+      <td>${esc(a.subject_name)}</td>
+      <td>${a.total_classes}</td>
+      <td>${a.attended}</td>
+      <td><span class="${pct>=75?'att-ok':'att-low'}">${pct}%</span></td>
+      <td>${a.month_year||'—'}</td>
+      <td><button class="act-btn act-del" onclick="deleteAttendance(${a.id})"><i class="bi bi-trash-fill"></i></button></td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="7" class="tbl-empty"><i class="bi bi-calendar-x"></i>No attendance yet.</td></tr>`;
+
+  return `
+    <div style="display:grid;grid-template-columns:340px 1fr;gap:1.2rem;align-items:start">
+      <div class="panel">
+        <div class="panel-header"><h4><i class="bi bi-plus-circle"></i> Add Attendance</h4></div>
+        <div class="panel-body">
+          <form id="attForm" novalidate>
+            <div class="form-grid" style="gap:.75rem">
+              <div class="form-field"><label>Student <span class="req">*</span></label><select class="inp" name="student_id" required><option value="">Select…</option>${studentOptions()}</select></div>
+              <div class="form-field"><label>Subject <span class="req">*</span></label><select class="inp" name="subject_id" required><option value="">Select…</option>${subjectOptions()}</select></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+                <div class="form-field"><label>Total <span class="req">*</span></label><input class="inp" name="total_classes" type="number" min="0" required/></div>
+                <div class="form-field"><label>Attended <span class="req">*</span></label><input class="inp" name="attended" type="number" min="0" required/></div>
+              </div>
+              <div class="form-field"><label>Month/Year</label><input class="inp" name="month_year" placeholder="e.g. Jan 2025"/></div>
+              <button type="submit" class="btn btn-primary btn-full"><i class="bi bi-plus-circle"></i> Save Attendance</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="panel tab-panel">
+        <div class="panel-header"><h4><i class="bi bi-calendar2-check-fill"></i> Attendance Records</h4></div>
+        <div class="tbl-wrap"><table class="tbl"><thead>
+          <tr><th>Student</th><th>Subject</th><th>Total</th><th>Attended</th><th>%</th><th>Month</th><th></th></tr>
+        </thead><tbody>${rows}</tbody></table></div>
+      </div>
+    </div>`;
+}
+
+// ── NOTICES ───────────────────────────────────────────────────
+function renderNotices() {
+  const rows = DB.notices.map(n=>`
+    <tr>
+      <td>${esc(n.title.slice(0,55))}${n.title.length>55?'…':''}</td>
+      <td><span class="ncat ${categoryClass(n.category)}">${esc(n.category)}</span></td>
+      <td>${fmtDate(n.created_at)}</td>
+      <td><button class="act-btn act-del" onclick="deleteNotice(${n.id})"><i class="bi bi-trash-fill"></i></button></td>
+    </tr>`).join('') || `<tr><td colspan="4" class="tbl-empty"><i class="bi bi-bell-slash"></i>No notices.</td></tr>`;
+
+  return `
+    <div style="display:grid;grid-template-columns:340px 1fr;gap:1.2rem;align-items:start">
+      <div class="panel">
+        <div class="panel-header"><h4><i class="bi bi-plus-circle"></i> Post Notice</h4></div>
+        <div class="panel-body">
+          <form id="noticeForm" novalidate>
+            <div class="form-grid" style="gap:.75rem">
+              <div class="form-field"><label>Title <span class="req">*</span></label><input class="inp" name="title" required minlength="5"/></div>
+              <div class="form-field"><label>Body <span class="req">*</span></label><textarea class="inp" name="body" rows="4" required></textarea></div>
+              <div class="form-field"><label>Category</label>
+                <select class="inp" name="category"><option>General</option><option>Exam</option><option>Fee</option><option>Event</option><option>Urgent</option></select>
+              </div>
+              <button type="submit" class="btn btn-primary btn-full"><i class="bi bi-megaphone"></i> Post Notice</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="panel tab-panel">
+        <div class="panel-header"><h4><i class="bi bi-megaphone-fill"></i> All Notices</h4></div>
+        <div class="tbl-wrap"><table class="tbl"><thead>
+          <tr><th>Title</th><th>Category</th><th>Posted</th><th></th></tr>
+        </thead><tbody>${rows}</tbody></table></div>
+      </div>
+    </div>`;
+}
+
+// ── PAYMENTS ──────────────────────────────────────────────────
+function renderPayments() {
+  const rows = DB.payments.map(p=>`
+    <tr>
+      <td>${esc(p.student_name)}<br><span class="mono text-muted" style="font-size:.72rem">${esc(p.roll_no)}</span></td>
+      <td>${esc(p.description.slice(0,35))}${p.description.length>35?'…':''}</td>
+      <td class="fw6">₹${fmt(p.amount)}</td>
+      <td><span class="status ${statusClass(p.status)}">${esc(p.status)}</span></td>
+      <td>${fmtDate(p.due_date)}</td>
+      <td>
+        <div class="act-row">
+          <button class="act-btn act-edit" title="Update" onclick="openUpdatePayment(${p.id},'${esc(p.status)}')"><i class="bi bi-pencil-fill"></i></button>
+          <button class="act-btn act-del" title="Delete" onclick="deletePayment(${p.id})"><i class="bi bi-trash-fill"></i></button>
+        </div>
+      </td>
+    </tr>`).join('') || `<tr><td colspan="6" class="tbl-empty"><i class="bi bi-wallet2"></i>No payments.</td></tr>`;
+
+  return `
+    <div style="display:grid;grid-template-columns:340px 1fr;gap:1.2rem;align-items:start">
+      <div class="panel">
+        <div class="panel-header"><h4><i class="bi bi-plus-circle"></i> Add Payment</h4></div>
+        <div class="panel-body">
+          <form id="payForm" novalidate>
+            <div class="form-grid" style="gap:.75rem">
+              <div class="form-field"><label>Student <span class="req">*</span></label><select class="inp" name="student_id" required><option value="">Select…</option>${studentOptions()}</select></div>
+              <div class="form-field"><label>Description <span class="req">*</span></label><input class="inp" name="description" required/></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+                <div class="form-field"><label>Amount (₹) <span class="req">*</span></label><input class="inp" name="amount" type="number" min="0" step="0.01" required/></div>
+                <div class="form-field"><label>Status</label>
+                  <select class="inp" name="status"><option>Pending</option><option>Paid</option><option>Overdue</option></select>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+                <div class="form-field"><label>Due Date</label><input class="inp" name="due_date" type="date"/></div>
+                <div class="form-field"><label>Paid Date</label><input class="inp" name="paid_date" type="date"/></div>
+              </div>
+              <div class="form-field"><label>Receipt No.</label><input class="inp" name="receipt_no"/></div>
+              <button type="submit" class="btn btn-primary btn-full"><i class="bi bi-plus-circle"></i> Add Payment</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="panel tab-panel">
+        <div class="panel-header"><h4><i class="bi bi-wallet2"></i> All Payments</h4></div>
+        <div class="tbl-wrap"><table class="tbl"><thead>
+          <tr><th>Student</th><th>Description</th><th>Amount</th><th>Status</th><th>Due</th><th>Actions</th></tr>
+        </thead><tbody>${rows}</tbody></table></div>
+      </div>
+    </div>`;
+}
+
+// ── Event binding ─────────────────────────────────────────────
+function bindTabEvents(name) {
+  if (name === 'marks') {
+    document.getElementById('marksForm')?.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!validateForm(e.target)) { toast('Fill required fields.','error'); return; }
+      const d = formData(e.target);
+      if (+d.marks > +d.max_marks) { toast('Marks cannot exceed max marks.','error'); return; }
+      showSpinner();
+      const res = await POST('/api/admin/marks/add', d);
+      hideSpinner();
+      if (res.ok) { toast('Marks added.','success'); e.target.reset(); await loadAdminData(); }
+      else toast(res.data.error||'Error','error');
+    });
+  }
+  if (name === 'attendance') {
+    document.getElementById('attForm')?.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!validateForm(e.target)) { toast('Fill required fields.','error'); return; }
+      const d = formData(e.target);
+      if (+d.attended > +d.total_classes) { toast('Attended cannot exceed total.','error'); return; }
+      showSpinner();
+      const res = await POST('/api/admin/attendance/add', d);
+      hideSpinner();
+      if (res.ok) { toast('Attendance saved.','success'); e.target.reset(); await loadAdminData(); }
+      else toast(res.data.error||'Error','error');
+    });
+  }
+  if (name === 'notices') {
+    document.getElementById('noticeForm')?.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!validateForm(e.target)) { toast('Fill required fields.','error'); return; }
+      showSpinner();
+      const res = await POST('/api/admin/notice/add', formData(e.target));
+      hideSpinner();
+      if (res.ok) { toast('Notice posted.','success'); e.target.reset(); await loadAdminData(); }
+      else toast(res.data.error||'Error','error');
+    });
+  }
+  if (name === 'payments') {
+    document.getElementById('payForm')?.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!validateForm(e.target)) { toast('Fill required fields.','error'); return; }
+      showSpinner();
+      const res = await POST('/api/admin/payment/add', formData(e.target));
+      hideSpinner();
+      if (res.ok) { toast('Payment added.','success'); e.target.reset(); await loadAdminData(); }
+      else toast(res.data.error||'Error','error');
+    });
+    document.getElementById('payUpdateForm')?.addEventListener('submit', async e => {
+      e.preventDefault();
+      const pid = document.getElementById('pu_id').value;
+      const d   = formData(e.target);
+      showSpinner();
+      const res = await POST(`/api/admin/payment/update?id=${pid}`, d);
+      hideSpinner();
+      closeModal('payUpdateModal');
+      if (res.ok) { toast('Payment updated.','success'); await loadAdminData(); }
+      else toast(res.data.error||'Error','error');
+    });
+  }
+}
+
+// ── Student modal helpers ─────────────────────────────────────
+function openAddStudent() {
+  document.getElementById('studentModalTitle').innerHTML = '<i class="bi bi-person-plus-fill"></i> Add Student';
+  document.getElementById('studentSubmitBtn').textContent = 'Add Student';
+  document.getElementById('studentForm').reset();
+  document.getElementById('s_id').value = '';
+  document.getElementById('s_pwField').style.display = '';
+  document.getElementById('s_pass').required = true;
+  document.getElementById('s_roll').readOnly = false;
+  openModal('studentModal');
+  document.getElementById('studentForm').onsubmit = submitAddStudent;
+}
+
+function openEditStudent(id) {
+  const s = DB.students.find(s=>s.id===id);
+  if (!s) return;
+  document.getElementById('studentModalTitle').innerHTML = '<i class="bi bi-pencil-fill"></i> Edit Student';
+  document.getElementById('studentSubmitBtn').textContent = 'Save Changes';
+  document.getElementById('s_id').value      = s.id;
+  document.getElementById('s_roll').value    = s.roll_no;
+  document.getElementById('s_roll').readOnly = true;
+  document.getElementById('s_name').value    = s.name;
+  document.getElementById('s_email').value   = s.email;
+  document.getElementById('s_phone').value   = s.phone||'';
+  document.getElementById('s_branch').value  = s.branch;
+  document.getElementById('s_section').value = s.section||'A';
+  document.getElementById('s_dob').value     = s.dob||'';
+  document.getElementById('s_address').value = s.address||'';
+  document.getElementById('s_pwField').style.display = 'none';
+  document.getElementById('s_pass').required = false;
+  const ySel = document.getElementById('s_year');
+  [...ySel.options].forEach(o => o.selected = (+o.value === s.year));
+  openModal('studentModal');
+  document.getElementById('studentForm').onsubmit = submitEditStudent;
+}
+
+async function submitAddStudent(e) {
+  e.preventDefault();
+  if (!validateForm(e.target)) { toast('Fill required fields.','error'); return; }
+  const d = formData(e.target);
+  showSpinner();
+  const res = await POST('/api/admin/student/add', d);
+  hideSpinner();
+  if (res.ok) { toast('Student added.','success'); closeModal('studentModal'); await loadAdminData(); }
+  else toast(res.data.error||'Error','error');
+}
+
+async function submitEditStudent(e) {
+  e.preventDefault();
+  if (!validateForm(e.target)) { toast('Fill required fields.','error'); return; }
+  const id = document.getElementById('s_id').value;
+  const d  = formData(e.target);
+  showSpinner();
+  const res = await POST(`/api/admin/student/update?id=${id}`, d);
+  hideSpinner();
+  if (res.ok) { toast('Student updated.','success'); closeModal('studentModal'); await loadAdminData(); }
+  else toast(res.data.error||'Error','error');
+}
+
+async function deleteStudent(id, name) {
+  if (!confirm(`Delete student "${name}"? All their data will be removed.`)) return;
+  showSpinner();
+  const res = await POST(`/api/admin/student/delete?id=${id}`, {});
+  hideSpinner();
+  if (res.ok) { toast('Student deleted.','success'); await loadAdminData(); }
+  else toast(res.data.error||'Error','error');
+}
+
+async function deleteMark(id) {
+  if (!confirm('Delete this marks entry?')) return;
+  showSpinner();
+  const res = await POST(`/api/admin/marks/delete?id=${id}`, {});
+  hideSpinner();
+  if (res.ok) { toast('Deleted.','success'); await loadAdminData(); }
+}
+
+async function deleteAttendance(id) {
+  if (!confirm('Delete this attendance record?')) return;
+  showSpinner();
+  const res = await POST(`/api/admin/attendance/delete?id=${id}`, {});
+  hideSpinner();
+  if (res.ok) { toast('Deleted.','success'); await loadAdminData(); }
+}
+
+async function deleteNotice(id) {
+  if (!confirm('Delete this notice?')) return;
+  showSpinner();
+  const res = await POST(`/api/admin/notice/delete?id=${id}`, {});
+  hideSpinner();
+  if (res.ok) { toast('Deleted.','success'); await loadAdminData(); }
+}
+
+function openUpdatePayment(id, currentStatus) {
+  document.getElementById('pu_id').value = id;
+  const sel = document.getElementById('pu_status');
+  [...sel.options].forEach(o => o.selected = (o.value === currentStatus));
+  openModal('payUpdateModal');
+}
+
+async function deletePayment(id) {
+  if (!confirm('Delete this payment?')) return;
+  showSpinner();
+  const res = await POST(`/api/admin/payment/delete?id=${id}`, {});
+  hideSpinner();
+  if (res.ok) { toast('Deleted.','success'); await loadAdminData(); }
+}
+</script>
+</body>
+</html>
