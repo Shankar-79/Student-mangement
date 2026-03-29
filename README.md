@@ -1,7 +1,6 @@
 # Student MIS — Pure Python + HTML/CSS/JS
 
-No Flask. No XAMPP. No external packages.
-Uses Python's built-in `http.server` + `sqlite3`.
+
 
 ---
 
@@ -14,7 +13,7 @@ python server.py
 
 Open → **http://localhost:8000**
 
-The database (`mis.db`) is created automatically with sample data on first run.
+
 
 ---
 
