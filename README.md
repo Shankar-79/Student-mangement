@@ -1,78 +1,80 @@
-# Student MIS — Pure Python + HTML/CSS/JS
+# Student MIS — Full Stack Web Application
 
-
+A complete Student Management Information System (MIS) built using Python (HTTP Server) and MySQL, with a responsive frontend in HTML, CSS, and JavaScript.
 
 ---
 
-## ▶ Run in 2 steps
-
-```bash
+## Run Locally
 
 python server.py
-```
 
-Open → **http://localhost:8000**
-
-
+Open in browser:
+http://localhost:8000
 
 ---
 
-## 🔑 Login Credentials
+## Demo Credentials
 
-| Role    | Username / Email      | Password    |
-|---------|-----------------------|-------------|
-| Admin   | `admin`               | `admin@123` |
-| Student | `arjun@student.edu`   | `pass@123`  |
-| Student | `priya@student.edu`   | `pass@123`  |
-| Student | `rahul@student.edu`   | `pass@123`  |
+Admin:
+username: admin
+password: admin@123
 
----
-
-## 📁 Project Structure
-
-```
-mis/
-├── server.py               ← Python backend (http.server + sqlite3)
-├── mis.db                  ← SQLite DB (auto-created on first run)
-│
-├── pages/
-│   ├── login.html          ← Login page (student + admin toggle)
-│   ├── dashboard.html      ← Student dashboard (cards + charts)
-│   ├── profile.html        ← Student profile view + edit
-│   ├── payments.html       ← Fee history with filter
-│   └── admin.html          ← Full admin CRUD panel
-│
-└── static/
-    ├── css/
-    │   └── style.css       ← Complete design system
-    └── js/
-        └── api.js          ← Shared: fetch helper, auth, toast, modal, sidebar
-```
+Student:
+email: arjun@student.edu
+password: pass@123
 
 ---
 
-## ✨ Features
+## Tech Stack
 
-**No dependencies** — runs with `python server.py`, nothing to install.
+Backend: Python (http.server)
+Database: MySQL (XAMPP)
+Frontend: HTML, CSS, JavaScript
+Charts: Chart.js
 
-**Student Module**
+---
+
+## Features
+
+Student Module:
 - Login with email or roll number
-- Dashboard: stat cards, Chart.js bar + doughnut charts, marks table, notices
-- Profile: view + edit (saves to DB via fetch)
-- Payments: history table with Paid/Pending/Overdue filter
+- Dashboard with marks, attendance, and charts
+- Profile update system
+- Payment history tracking
 
-**Admin Module**
-- Tab-based dashboard (Students, Marks, Attendance, Notices, Payments)
-- Students: Add via modal, Edit via modal (pre-filled), Delete with confirm
-- Marks: Add + delete records
-- Attendance: Add/update + delete (upsert by student+subject+month)
-- Notices: Post + delete with categories
-- Payments: Add + update status + delete
+Admin Module:
+- Manage students (Add, Update, Delete)
+- Manage marks and attendance
+- Post notices
+- Handle fee records
 
-**UI/UX**
-- Fixed sidebar desktop, slide-in sidebar mobile with overlay
-- Logout confirmation modal on every page
-- Toast notifications for all actions
-- Full client-side form validation
-- Loading spinner for async operations
-- Responsive — works on mobile, tablet, desktop
+---
+
+## Highlights
+
+- No frameworks used
+- Lightweight and fast
+- Clean UI with responsive design
+- Real-time data visualization
+
+---
+
+## Project Structure
+
+student-mis/
+  server.py
+  pages/
+    login.html
+    dashboard.html
+    profile.html
+    payments.html
+    admin.html
+  static/
+    css/
+    js/
+
+---
+
+## Tagline
+
+Your academic universe, unified.
